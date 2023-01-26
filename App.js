@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -21,6 +21,8 @@ Notifications.setNotificationHandler({
 });
 
 export default function App() {
+  const [dados, setDados] = useState(null);
+
   useEffect(() => {
     /* Necessário para IOS */
     async function permissoesIos() {
@@ -45,6 +47,7 @@ export default function App() {
     quando o usuário interage (toca) na notificação. */
     Notifications.addNotificationResponseReceivedListener((resposta) => {
       console.log(resposta.notification.request.content.data);
+      setDados(resposta.notification.request.content.data);
     });
   }, []);
 
@@ -68,6 +71,12 @@ export default function App() {
       <SafeAreaView style={estilos.container}>
         <Text>Exemplo de sistema de notificação local</Text>
         <Button title="Disparar notificação" onPress={enviarMensagem} />
+        {dados && (
+          <View style={estilos.conteudo}>
+            <Text>{dados.usuario}</Text>
+            <Text>{dados.cidade}</Text>
+          </View>
+        )}
       </SafeAreaView>
     </>
   );
@@ -79,5 +88,10 @@ const estilos = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+  },
+  conteudo: {
+    backgroundColor: "yellow",
+    marginVertical: 16,
+    padding: 8,
   },
 });
